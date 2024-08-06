@@ -1,5 +1,6 @@
 import { MenuIcon } from "lucide-react";
 import Link from "next/link";
+import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 
 export const Navbar = () => {
   const user = {};
@@ -67,6 +68,12 @@ export const Navbar = () => {
           </span>
         </Link>
         {/* {user ? <UserButton afterSignOutUrl="/" /> : null} */}
+        <SignedOut>
+          <SignInButton />
+        </SignedOut>
+        <SignedIn>
+          <UserButton />
+        </SignedIn>
         <MenuIcon className="md:hidden" />
       </aside>
     </header>
