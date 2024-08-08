@@ -1,21 +1,52 @@
 import ProfileForm from "@/components/forms/profile-form";
 import ProfilePicture from "./_components/profile-picture";
 import { db } from "@/lib/db";
+import { currentUser } from "@clerk/nextjs/server";
 
 const Settings = async () => {
-  // const updateUserInfo = async (name: string) => {
-  //   "use server";
+  const authUser = await currentUser();
+  if (!authUser) return null;
 
-  //   const updateUser = await db.user.update({
-  //     where: {
-  //       clerkId: authUser.id,
-  //     },
-  //     data: {
-  //       name,
-  //     },
-  //   });
-  //   return updateUser;
-  // };
+  const user = await db.user.findUnique({ where: { clerkId: authUser.id } });
+
+  const removeProfileImage = async () => {
+    "use server";
+    const response = await db.user.update({
+      where: { clerkId: authUser.id },
+      data: {
+        profileImage: "",
+      },
+    });
+
+    return response;
+  };
+
+  const uploadProfileImage = async (imageUrl: string) => {
+    "use server";
+
+    const response = await db.user.update({
+      where: { clerkId: authUser.id },
+      data: {
+        profileImage: imageUrl,
+      },
+    });
+
+    return response;
+  };
+
+  const updateUserInfo = async (name: string) => {
+    "use server";
+
+    const updateUser = await db.user.update({
+      where: {
+        clerkId: authUser.id,
+      },
+      data: {
+        name,
+      },
+    });
+    return updateUser;
+  };
 
   return (
     <div className="flex flex-col gap-4">
@@ -29,12 +60,12 @@ const Settings = async () => {
             Add or update your information
           </p>
         </div>
-        {/* <ProfilePicture
+        <ProfilePicture
           onDelete={removeProfileImage}
           userImage={user?.profileImage || ""}
           onUpload={uploadProfileImage}
-        /> */}
-        <ProfileForm />
+        />
+        <ProfileForm user={user} onUpdate={updateUserInfo} />
       </div>
     </div>
   );
