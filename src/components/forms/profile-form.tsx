@@ -72,12 +72,7 @@ const ProfileForm = ({ user, onUpdate }: ProfileFormProps) => {
             <FormItem>
               <FormLabel className="text-lg">Email</FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  disabled={true}
-                  placeholder="Email"
-                  type="email"
-                />
+                <Input {...field} disabled placeholder="Email" type="email" />
               </FormControl>
               <FormMessage />
             </FormItem>
